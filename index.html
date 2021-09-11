@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ТИПИС. Практика</title>
+    <style>
+        .sinOneHertz {
+            height: 370px;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+    </header>
+    <main>
+        <div class="task">
+            <h3>Задание 1. Спектр гармонического сигнала.</h3>
+            <p>Необходимо получить графики гармонического сигнала с частотами 1,2,4,8 герц и спектры этих сигналов.</p>
+
+            <h4>Описание работы</h4>
+            <p>TODO</p>
+
+            <div id="chartContainer">
+
+            </div>
+        </div>
+    </main>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+    <script>
+        window.onload = function() {
+            var dps = [];
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                exportEnabled: true,
+                title :{
+                    text: "Sin 1 Hertz"
+                },
+                data: [{
+                    type: "spline",
+                    markerSize: 0,
+                    dataPoints: dps 
+                }]
+            });     
+
+            var xVal = 0;
+            var yVal = 0;
+            var updateInterval = 1000;
+            var dataLength = 50;
+
+            var updateChart = (count) => {
+                count = count || 1;
+                for (var j = 0; j < count; j++) {
+                    yVal = yVal + Math.sin(xVal);
+                    dps.push({
+                        x: xVal,
+                        y: yVal
+                    });
+                    xVal += updateInterval;
+                }
+                if (dps.length > dataLength) {
+                    dps.shift();
+                }
+                chart.render();
+            }
+
+            updateChart(dataLength);
+            setInterval(() => updateChart(), updateInterval)
+        }
+    </script>
+</body>
+</html>
