@@ -6,71 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ТИПИС. Практика</title>
     <style>
-        .sinOneHertz {
-            height: 370px;
-            width:100%;
+        body {
+            
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        .chart {
+            height: 400px;
+            width: 100%;
+            margin: 15px 0;
         }
     </style>
 </head>
 <body>
-    <header>
-
-    </header>
     <main>
         <div class="task">
             <h3>Задание 1. Спектр гармонического сигнала.</h3>
             <p>Необходимо получить графики гармонического сигнала с частотами 1,2,4,8 герц и спектры этих сигналов.</p>
-
             <h4>Описание работы</h4>
-            <p>TODO</p>
-
-            <div id="chartContainer">
-
+            <div class="container">
+                <div class="chart" id="oneHertz"></div>
+                <div class="chart" id="twoHertz"></div>
+                <div class="chart" id="fourHertz"></div>
+                <div class="chart" id="eightHertz"></div>
             </div>
         </div>
     </main>
     
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script>
-        window.onload = function() {
-            var dps = [];
+            chartBy(Math.sin, 1, {
+                id: "oneHertz",
+                maximum: 2,
+                minimum: -2,
+                title: "Chart by Sin 1 Hertz"
+            }); 
 
-            var chart = new CanvasJS.Chart("chartContainer", {
-                exportEnabled: true,
-                title :{
-                    text: "Sin 1 Hertz"
+            chartBy(Math.sin, 2, {
+                id: "twoHertz",
+                maximum: 2,
+                minimum: -2,
+                title: "Chart by Sin 2 Hertz"
+            });
+            chartBy(Math.sin, 4, {
+                id: "fourHertz",
+                maximum: 2,
+                minimum: -2,
+                title: "Chart by Sin 4 Hertz"
+            });
+            chartBy(Math.sin, 8, {
+                id: "eightHertz",
+                maximum: 2,
+                minimum: -2,
+                title: "Chart by Sin 8 Hertz"
+            });
+        
+        // Функция создает график циклической фукции
+        // @cb - callback функция описывающая график
+        // @frequency - частота колебания 
+        // @props - параметры графика
+        function chartBy(cb, frequency, props) {
+            var y = 0;
+            var x = 0;    
+            let data = [];
+            let dataSeries = { type: "line" };
+            var dataPoints = [];
+            dataSeries.dataPoints = dataPoints;
+            dataSeries.markerSize = 0;
+            data.push(dataSeries);
+            
+            //Better to construct options first and then pass it as a parameter
+            var options = {
+                zoomEnabled: false,
+                animationEnabled: true,
+                
+                toolTip: {
+                    enabled: false
                 },
-                data: [{
-                    type: "spline",
-                    markerSize: 0,
-                    dataPoints: dps 
-                }]
-            });     
+                title: {
+                    text: props.title,
+                    
+                },
+                axisX: {
+                    title: "Time, s",
+                    labelAutoFit: false,
+                    gridThickness: 2,
+                    viewportMinimum: 0,
+                    viewportMaximum: 10
+                },
+                axisY: {
+                    minimum: props.minimum,
+                    maximum: props.maximum,
+                    lineThickness: 1
+                },
+                data: data
+            };
 
-            var xVal = 0;
-            var yVal = 0;
-            var updateInterval = 1000;
-            var dataLength = 50;
-
-            var updateChart = (count) => {
-                count = count || 1;
-                for (var j = 0; j < count; j++) {
-                    yVal = yVal + Math.sin(xVal);
-                    dps.push({
-                        x: xVal,
-                        y: yVal
-                    });
-                    xVal += updateInterval;
-                }
-                if (dps.length > dataLength) {
-                    dps.shift();
-                }
+            var chart = new CanvasJS.Chart(props.id, options);
+            var interval = setInterval(charUpdate, 1);
+            function charUpdate() {
+                if (x / (2 * Math.PI) > 10) clearInterval(interval);
+                var datapoint = func(x);
+                dataPoints.push(datapoint);
+                x += (2 * Math.PI) / 100;
                 chart.render();
+                function func(x) {
+                    return {x: x / (2 * Math.PI), y: cb(x * frequency)}
+                }
             }
-
-            updateChart(dataLength);
-            setInterval(() => updateChart(), updateInterval)
         }
     </script>
 </body>
