@@ -20,19 +20,19 @@
 <body>
     <main>
         <div class="task">
-            <h3>Задание 1. Спектр гармонического сигнала.</h3>
+            <h3>Задание 2. Спектр импульсного сигнала.</h3>
             <div class="container">
                 
-                <div class="chart" id="sin1"></div>
+                <div class="chart" id="sign1"></div>
                 <div class="chart" id="freq1"></div>
 
-                <div class="chart" id="sin2"></div>
+                <div class="chart" id="sign2"></div>
                 <div class="chart" id="freq2"></div>
 
-                <div class="chart" id="sin4"></div>
+                <div class="chart" id="sign4"></div>
                 <div class="chart" id="freq4"></div>
 
-                <div class="chart" id="sin8"></div>
+                <div class="chart" id="sign8"></div>
                 <div class="chart" id="freq8"></div>
             </div>
         </div>
@@ -631,6 +631,7 @@
                 var dataPoints = this.calculate();
                 dataSeries.dataPoints = dataPoints;
                 dataSeries.markerSize = 0;
+                dataSeries.color = "red"
                 data.push(dataSeries);
                 var options = {
                     zoomEnabled: false,
@@ -666,7 +667,7 @@
                 let fft = new RFFT(8192, yValues);
                 
                 let data = [];
-                let dataSeries = { type: "line" };
+                let dataSeries = { type: "column" };
                 
                 var res = fft.forward(yValues).filter(el => el > 0.0001).map(el => el.toFixed(4));
                 let temp = [];
@@ -679,6 +680,7 @@
 
                 dataSeries.dataPoints = dataPoints;
                 dataSeries.markerSize = 0;
+                dataSeries.color = "blue"
                 data.push(dataSeries);
                 var options = {
                     zoomEnabled: false,
@@ -716,11 +718,11 @@
 
 
         window.onload = () => {
-            const test1 = new EFunction(Math.sin, {
+            const test1 = new EFunction((x) => Math.sign(Math.sin(x)), {
               range: {a: 0, b: 10},
               freq: 1,
               id: {
-                tempId: "sin1",
+                tempId: "sign1",
                 freqId: "freq1"
               }
             });
@@ -728,33 +730,33 @@
             test1.graph2d("freq");
             
 
-            const test2 = new EFunction(Math.sin,  {
+            const test2 = new EFunction((x) => Math.sign(Math.sin(x)),  {
               range: {a: 0, b: 10},
               freq: 2,
               id: {
-                tempId: "sin2",
+                tempId: "sign2",
                 freqId: "freq2"
               }
             });
             test2.graph2d();
             test2.graph2d("freq");
 
-            const test3 = new EFunction(Math.sin,  {
+            const test3 = new EFunction((x) => Math.sign(Math.sin(x)),  {
               range: {a: 0, b: 10},
               freq: 4,
               id: {
-                tempId: "sin4",
+                tempId: "sign4",
                 freqId: "freq4"
               }
             });
             test3.graph2d();
             test3.graph2d("freq");
 
-            const test4 = new EFunction(Math.sin,  {
+            const test4 = new EFunction((x) => Math.sign(Math.sin(x)),  {
               range: {a: 0, b: 10},
               freq: 8,
               id: {
-                tempId: "sin8",
+                tempId: "sign8",
                 freqId: "freq8"
               }
             });
